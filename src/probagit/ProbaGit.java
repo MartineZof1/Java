@@ -16,6 +16,7 @@ public class ProbaGit {
      */
     public static void main(String[] args) {
         System.out.println("Первая версия");
+        System.out.println("Вторая версия");
     }
     
 }
