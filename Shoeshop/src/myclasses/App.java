@@ -102,7 +102,7 @@ public class App {
         keeping.saveShoes(shoes);
     }
     private void addCustomers(){
-        System.out.println("--- Добавление читателя ---");
+        System.out.println("--- Добавление покупателя ---");
         customers reader = new customers();
         System.out.println("Имя покупателя");
         reader.setFirstname(scanner.nextLine());
@@ -131,69 +131,67 @@ public class App {
                 }
                 
                 System.out.println(i+1
-                        +". "+books.get(i).getShoesName()
+                        +". "+shoes.get(i).getShoesName()
                         +". "+sbBrandName.toString()
-                        +". В наличии: " + books.get(i).getPrice()
+                        +". В наличии: " + shoes.get(i).getPrice()
                 );
                 n++;
             }
         }
         if(n < 1){
-            System.out.println("Нет книг для чтения");
+            System.out.println("Нет модели");
             return;
         }
-        System.out.print("Выберите номер книги: ");
-        int numberBook = scanner.nextInt(); scanner.nextLine();
-        System.out.println("Список читателей:");
-        for (int i = 0; i < readers.size(); i++) {
-            if(readers.get(i) != null){
-                System.out.println(i+1+". "+readers.get(i).toString());
+        System.out.print("Выберите номер модели: ");
+        int numberShoes = scanner.nextInt(); scanner.nextLine();
+        System.out.println("Список покупателей:");
+        for (int i = 0; i < customers.size(); i++) {
+            if(customers.get(i) != null){
+                System.out.println(i+1+". "+customers.get(i).toString());
             }
         }
-        System.out.print("Выберите номер читателя: ");
-        int numberReader = scanner.nextInt(); scanner.nextLine();
-        history.setBook(books.get(numberBook-1));
-        history.setReader(readers.get(numberReader-1));
+        System.out.print("Выберите номер покупателя: ");
+        int numberCustomers = scanner.nextInt(); scanner.nextLine();
+        history.setShoes(books.get(numberShoes-1));
+        history.setCustomers(readers.get(numberCustomers-1));
         Calendar c = new GregorianCalendar();
         history.setGivenDate(c.getTime());
-        history.getBook().setCount(history.getBook().getCount() - 1);
-        keeping.saveBooks(books);
+        history.getShoes().setPrice(history.getShoes().getPrice() - 1);
+        keeping.saveShoes(books);
         histories.add(history);
         keeping.saveHistories(histories);
-        System.out.println("Книга "+history.getBook().getBookName()
-                            +" выдана читателю "+history.getReader().getFirstname()
-                            +" " +history.getReader().getLastname()
+        System.out.println("Модель "+history.getShoes().getShoesName()
+                            +" продана "+history.getCustomers().getFirstname()
+                            +" " +history.getCustomers().getLastname()
         );
         System.out.println("-------------------");
         
     }
 
-    private void printListBooks() {
+    private void printListShoes() {
         System.out.println("--- Список книг ---");
-        for (int i = 0; i < books.size(); i++) {
-            if(books.get(i) != null && books.get(i).getCount() > 0){
+        for (int i = 0; i < shoes.size(); i++) {
+            if(books.get(i) != null && books.get(i).getPrice() > 0){
                 System.out.printf("%d. %s. %s. %d. В наличии екземпляров: %d%n"
                         ,i+1
-                        ,books.get(i).getBookName()
-                        ,Arrays.toString(books.get(i).getAuthors())
-                        ,books.get(i).getPublishedYear()
-                        ,books.get(i).getCount()
+                        ,books.get(i).getShoesName()
+                        ,books.get(i).getPrice()
                 );
-            }else if(books.get(i) != null){
+            }else if(shoes.get(i) != null){
                 System.out.printf("%d. %s. %s. %d. Книга читается до: %s%n"
                         ,i+1
-                        ,books.get(i).getBookName()
-                        ,Arrays.toString(books.get(i).getAuthors())
-                        ,books.get(i).getPublishedYear()
-                        ,getReturnDate(books.get(i))
+                        ,books.get(i).getShoesName()
+                        ,customers.get(i).getCustomers()
+                        ,Arrays.toString(shoes.get(i).getCustomers())
+                        ,getReturnDate(shoes.get(i))
                 );
             }
         }
         System.out.println("-------------------");
     }
-    private String getReturnDate(Book book){
+    private String getReturnDate(shoes shoes){
         for (int i = 0; i < histories.size(); i++) {
-            if(book.getBookName().equals(histories.get(i).getBook().getBookName())
+            if(shoes.getShoesName().equals(histories.get(i).getShoes().getShoesName())
                     && histories.get(i).getReturnedDate() == null){
                 Date givenDate = histories.get(i).getGivenDate();
                 LocalDate localGivenDate = givenDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -204,70 +202,30 @@ public class App {
         return "";
     }
     private void printListReaders() {
-        System.out.println("--- Список читателей ---");
-        for (int i = 0; i < readers.size(); i++) {
-            if(readers.get(i) != null){
-                System.out.println(readers.get(i).toString());
+        System.out.println("--- Список покупателей ---");
+        for (int i = 0; i < customers.size(); i++) {
+            if(customers.get(i) != null){
+                System.out.println(customers.get(i).toString());
             }
         }
         System.out.println("-------------------");
     }
 
-    private void returnBook() {
-        System.out.println("--- Возврат книги ---");
-        System.out.println("Список читаемых книг:");
-        int n = 0;
-        for (int i = 0; i < histories.size(); i++) {
-            if(histories.get(i) != null
-                 && histories.get(i).getReturnedDate() == null
-                    && histories.get(i).getBook().getCount() 
-                    <  histories.get(i).getBook().getQuantity()
-            ){
-                System.out.printf("%d. Книгу \"%s\" читает %s %s%n"
-                        ,i+1
-                        ,histories.get(i).getBook().getBookName()
-                        ,histories.get(i).getReader().getFirstname()
-                        ,histories.get(i).getReader().getLastname()
-                );
-                 n++;
-            }
-        }
-        if(n < 1){
-            System.out.println("Нет читаемых книг!");
-            System.out.println("-------------------");
-            return;
-        }
-        System.out.print("Выберите номер возврщаемой книги: ");
-        int numberHistory = scanner.nextInt(); scanner.nextLine();
-        Calendar c = new GregorianCalendar();
-        histories.get(numberHistory - 1).setReturnedDate(c.getTime());
-        histories.get(numberHistory - 1).getBook().setCount(
-                histories.get(numberHistory - 1).getBook().getCount()+1
-        );
-        keeping.saveBooks(books);
-        keeping.saveHistories(histories);
-        System.out.println("Книга "
-                +histories.get(numberHistory - 1).getBook().getBookName()
-                +" возвращена в библиотеку"
-        );
-        System.out.println("-------------------");
-    }
-
-    private void printListGivenBooks() {
-        System.out.println("Список читаемых книг:");
+    private void printListGivenShoes() {
+        System.out.println("Список проданой обуви:");
         int n = 0;
         for (int i = 0; i < histories.size(); i++) {
             if(histories.get(i) != null && histories.get(i).getReturnedDate() == null){
-                System.out.println(i+1+". Книгу "
-                        +histories.get(i).getBook().getBookName()
-                        +" читает "+histories.get(i).getReader().getFirstname()
-                        +" "+histories.get(i).getReader().getLastname()
+                System.out.println(i+1+". Обувь "
+                        +histories.get(i).getShoes().getShoesName()
+                        +" продана "+histories.get(i).getCustomers().getFirstname()
+                        +" "+histories.get(i).getCustomers().getLastname()
                 );
                 n++;
             }
         }
         if(n < 1){
-            System.out.println("Нет читаемых книг!");
+            System.out.println("Нет проданной обуви!");
             System.out.println("-------------------");
         }
     }

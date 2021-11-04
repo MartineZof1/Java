@@ -43,7 +43,7 @@ import java.util.Arrays;
     public String toString() {
         return "Shoes{" 
                 + "shoesName=" + shoesName 
-                + ", brand=" + brand 
+                + ", brand=" + brand
                 + ", quantity=" + quantity 
                 + ", price=" + price 
                 + '}';
