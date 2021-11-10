@@ -1,0 +1,6 @@
+1 goodsName1 goodsLabel1 1.31 51 ;
+2 goodsName2 goodsLabel2 1.32 52 ;
+3 goodsName3 goodsLabel3 1.33 53 ;
+4 goodsName4 goodsLabel4 1.34 54 ;
+5 goodsName5 goodsLabel5 1.35 55 ;
+6 goodsName6 goodsLabel6 1.36 56 ;
